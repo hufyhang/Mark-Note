@@ -94,6 +94,7 @@ module.exports = function (grunt) {
           {expand: true, src: ['./markdown-template.html'], dest: 'dist/'},
           {expand: true, src: ['./preview-template.html'], dest: 'dist/'},
           {expand: true, src: ['./overlay-template.html'], dest: 'dist/'},
+          {expand: true, src: ['./remove-template.html'], dest: 'dist/'},
           {expand: true, src: ['./img/markdown.png'], dest: 'dist/'},
           {expand: true, src: ['./php/sync.php'], dest: 'dist/'}
         ]

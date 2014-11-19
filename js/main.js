@@ -95,6 +95,32 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
       });
 
     });
+  })
+  .listen('remove', function () {
+    var removeTemp = $ch.readFile('remove-template.html');
+    $ch.scope('appScope').overlay.html(removeTemp).removeClass('hidden');
+
+    $ch.scope('overlayScope', function ($scope, $event) {
+      $event.listen('close', function () {
+        $ch.scope('appScope').overlay.html('').addClass('hidden');
+      });
+
+      $event.listen('remove', function () {
+        var id = $ch.source('id');
+        if (id === undefined || id === null) {
+          return;
+        }
+        var notes = $ch.store.local(SOTRE_KEY);
+        delete notes[id];
+        $ch.store.local(SOTRE_KEY, notes);
+
+        $event.emit('close');
+
+        $ch.event.emit('nav');
+        $ch.event.emit('editor');
+
+      });
+    });
   });
 
   // Setting router rules.
@@ -108,18 +134,6 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     },
     'note/:id': function (q) {
       $ch.event.emit('load', q.id);
-    },
-    'remove': function () {
-      var id = $ch.source('id');
-      if (id === undefined || id === null) {
-        return;
-      }
-      var notes = $ch.store.local(SOTRE_KEY);
-      delete notes[id];
-      $ch.store.local(SOTRE_KEY, notes);
-
-      $ch.event.emit('nav');
-      $ch.event.emit('editor');
     },
     'export': function () {
       var json = $ch.store.local(SOTRE_KEY) || {};
@@ -294,6 +308,9 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
           tables: true,
           breaks: true
         });
+      })
+      .listen('remove', function () {
+        $ch.event.emit('remove');
       });
 
       if (startEdit) {
