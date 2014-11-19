@@ -124,8 +124,12 @@ body {
 [ch-scope=editorScope] {
   width: 100%;
   height: 100%; }
+  [ch-scope=editorScope] #usage {
+    color: #000;
+    cursor: default;
+    margin-right: 10px; }
   [ch-scope=editorScope] #select {
-    width: 85%;
+    width: 100%;
     margin-bottom: 5px; }
   [ch-scope=editorScope] #small-remove-btn {
     margin-left: 20px;

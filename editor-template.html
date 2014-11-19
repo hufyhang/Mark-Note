@@ -4,6 +4,8 @@
       <select id="select" ch-name="select" ch-event="change: loadNote" ch-inline>
         <option data-counter="{{counter}}" data-id="{{id}}">{{cloud}}{{title}}</option>
       </select>
+      <br>
+      <span id="small-usage" ch-data>Storage used: {{usage}} / 5 MB </span>
       <span id="small-remove-btn" ch-event="click: remove">
         <i class="fa fa-times-circle"></i>
       </span>
@@ -23,8 +25,9 @@
       <a id="download-btn" href="#/download/" ch-event="click: download">
         <i class="fa fa-file-code-o"></i>
       </a>
-      <span id="remove-btn" ch-event="click: remove">
-        <i class="fa fa-times-circle"></i>
+      <span id="remove-btn">
+        <span id="usage" ch-data>Storage used: {{usage}} / 5 MB </span>
+        <i id="remove-btn-i" ch-event="click: remove" class="fa fa-times-circle"></i>
       </span>
 
     </div>

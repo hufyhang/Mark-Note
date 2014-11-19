@@ -230,8 +230,9 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     $ch.scope('navScope', function ($scope, $event) {
       $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
       $scope.noteEntities = [];
-      $ch.each($ch.source('notes'), function (id, note) {
+      $ch.each($ch.source('notes'), function (id, note, index) {
         $scope.noteEntities.push({
+          index: index + 1,
           id: note.id,
           title: note.title,
           cloud: note.cloud === true
@@ -251,6 +252,9 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
   function setEditorScope(startEdit) {
     $ch.scope('editorScope', function ($scope, $event) {
+      var usage = JSON.stringify(localStorage).length / 1000 / 1000;
+      $scope.usage.set(usage.toFixed(2));
+
       // Load notes.
       $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
       $scope.noteEntities = [{
@@ -273,7 +277,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
       $scope.select.inline($scope.noteEntities);
       var index = $ch.source('select') || 0;
-      $scope.select.el.selectedIndex = index;
+      // $scope.select.el.selectedIndex = index;
 
       $event.listen('loadNote', function (evt) {
         var option = evt.target.selectedOptions[0];
