@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mark Note</title>
+  <meta name="description" content="Keep markdown notes in your HTML5 offline storage.">
+  <meta name="keywords" content="ChopJS,markdown,note">
+  <meta name="author" content="Feifei Hang">
+  <meta name="robots" content="noindex, follow">
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+
+  <link rel="icon" href="img/markdown.png">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/normalize/3.0.1/normalize.min.css">
+  <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.2.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body ch-scope="appScope">
+  <div id="app-scope-container" class="ch-row">
+
+    <nav id="nav-container" class="ch-xs-3 ch-sm-3" ch-name="nav">
+    </nav>
+
+    <div id="editor-container" class="ch-xs-9 ch-sm-9" ch-name="editorContainer">
+      world!!!
+    </div>
+
+  </div>
+  <script src="js/src-min-noconflict/ace.js"></script>
+  <script src="js/marked.js"></script>
+  <script src="js/chop.min.js" ch-main="js/main.js"></script>
+</body>
+</html>

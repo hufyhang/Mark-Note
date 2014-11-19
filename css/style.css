@@ -1,0 +1,108 @@
+body {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  background: #101317;
+  color: #62f34b;
+  font-weight: lighter; }
+  body a {
+    color: black; }
+  body a:hover {
+    text-decoration: none; }
+
+.navbar {
+  color: black;
+  padding: 10px 20px;
+  border-bottom: 2px solid #cacaca;
+  background-color: #f7f7f7;
+  background-image: -moz-linear-gradient(top, white, #eaeaea);
+  background-image: -ms-linear-gradient(top, white, #eaeaea);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(white), to(#eaeaea));
+  background-image: -webkit-linear-gradient(top, white, #eaeaea);
+  background-image: -o-linear-gradient(top, white, #eaeaea);
+  background-image: linear-gradient(top, white, #eaeaea); }
+  .navbar a {
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 5px; }
+  .navbar .active {
+    font-weight: bold;
+    text-transform: uppercase; }
+  .navbar .active:hover {
+    color: black; }
+
+[ch-scope=appScope] #app-scope-container {
+  height: 100%; }
+[ch-scope=appScope] #nav-container, [ch-scope=appScope] #editor-container {
+  height: 100%; }
+
+[ch-scope=navScope] {
+  color: black;
+  height: 100%;
+  position: relative; }
+  [ch-scope=navScope] #nav-list {
+    margin: 0;
+    padding: 0;
+    background: #eaeaea;
+    overflow: auto;
+    height: 100%; }
+    [ch-scope=navScope] #nav-list ul {
+      margin: 0;
+      padding: 0;
+      margin-bottom: 90px; }
+      [ch-scope=navScope] #nav-list ul li {
+        padding: 10px;
+        list-style: none;
+        background: #eaeaea;
+        border-bottom: 1px solid #cacaca;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis; }
+      [ch-scope=navScope] #nav-list ul li.active {
+        background: #101317;
+        color: #62f34b; }
+      [ch-scope=navScope] #nav-list ul li.active a {
+        color: #62f34b; }
+  [ch-scope=navScope] footer {
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    padding: 10px;
+    background: #eaeaea;
+    text-align: center;
+    color: grey; }
+
+[ch-scope=editorScope] {
+  width: 100%;
+  height: 100%; }
+  [ch-scope=editorScope] #remove-btn {
+    color: #d2042e;
+    float: right;
+    cursor: pointer; }
+  [ch-scope=editorScope] #editor-div {
+    position: absolute;
+    top: 50px;
+    bottom: 0px;
+    width: 100%; }
+    [ch-scope=editorScope] #editor-div * {
+      font-family: "Lucida Console", Monaco, monospace; }
+  [ch-scope=editorScope] #editer-preview-div {
+    height: 100%; }
+
+[ch-scope=previewScope] {
+  height: 100%; }
+  [ch-scope=previewScope] #preview-div {
+    overflow: scroll;
+    height: 100%;
+    padding: 30px 20px;
+    font-weight: lighter; }
+    [ch-scope=previewScope] #preview-div a {
+      color: red; }
+    [ch-scope=previewScope] #preview-div td, [ch-scope=previewScope] #preview-div th {
+      border: 1px solid #62f34b;
+      padding: 5px 10px; }
+    [ch-scope=previewScope] #preview-div blockquote {
+      border-left: 4px solid #62f34b;
+      padding-left: 20px; }

@@ -1,0 +1,4 @@
+.ftppass
+dist/
+node_modules/
+.sass-cache/

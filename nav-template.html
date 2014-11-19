@@ -1,0 +1,20 @@
+<div ch-scope="navScope">
+  <div class="navbar">
+    <a id="new-btn" href="#/new" ch-event="click: new">
+      <i class="fa fa-file-o"></i>
+    </a>
+    <a href="#/pull">
+      <i class="fa fa-download"></i>
+    </a>
+  </div>
+
+  <div id="nav-list">
+    <ul id="notes-ul" ch-name="notesUl" ch-inline>
+      <li data-id="{{id}}">
+        {{cloud}}<a href="#/note/{{id}}">{{title}}</a>
+      </li>
+    </ul>
+  </div>
+
+  <footer>- Mark Note -</footer>
+</div>
