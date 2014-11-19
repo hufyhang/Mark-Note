@@ -368,6 +368,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
       $scope.ace = ace.edit($scope.editor.get('id'));
       $scope.ace.setTheme("ace/theme/tomorrow_night_eighties");
       $scope.ace.getSession().setMode("ace/mode/markdown");
+      $scope.ace.setOption("wrap", 60);
       $scope.ace.setFontSize(14);
 
       $ch.event.emit('bind editor', $scope);
