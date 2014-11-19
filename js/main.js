@@ -197,7 +197,8 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
           content = decodeURIComponent(content);
           content = JSON.parse(content);
 
-          var notes = $ch.store.local(SOTRE_KEY);
+          var notes = $ch.store.local(SOTRE_KEY) || {};
+
           content.id = Date.now() + $ch.utils.random(1000, 9999);
           content.cloud = true;
           notes[content.id] = content;
