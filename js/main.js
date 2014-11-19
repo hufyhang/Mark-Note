@@ -208,7 +208,8 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
   function setEditorScope(startEdit) {
     $ch.scope('editorScope', function ($scope, $event) {
       $event.listen('save', function () {
-        if ($scope.ace === undefined) {
+        if ($scope.ace === undefined ||
+            $scope.ace.getValue().trim() === '') {
           return;
         }
         var id = $ch.source('id') || Date.now();
