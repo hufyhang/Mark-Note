@@ -253,7 +253,12 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     $ch.scope('editorScope', function ($scope, $event) {
       // Load notes.
       $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
-      $scope.noteEntities = [];
+      $scope.noteEntities = [{
+        counter: counter++,
+        id: 0,
+        title: '-- select a note --',
+        cloud: ''
+      }];
       var counter = 0;
       $ch.each($ch.source('notes'), function (id, note) {
         $scope.noteEntities.push({
