@@ -147,7 +147,7 @@ body {
     bottom: 0px;
     width: 100%; }
     [ch-scope=editorScope] #editor-div * {
-      font-family: "Lucida Console", Monaco, monospace; }
+      font-family: Monaco, Menlo, 'Ubuntu Mono', Consolas, source-code-pro, monospace; }
   [ch-scope=editorScope] #editer-preview-div {
     height: 100%; }
 
