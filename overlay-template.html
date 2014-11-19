@@ -7,6 +7,6 @@
   </div>
 
   <div id="img-div" ch-data>
-    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ id | addPrefix }}" alt="QR Code"/>
+    <img src="http://api.qrserver.com/v1/create-qr-code/?color=000000&amp;bgcolor=FFFFFF&amp;data={{id | addPrefix | encode}}&amp;qzone=1&amp;margin=0&amp;size=350x350&amp;ecc=L" alt="QR Code"/>
   </div>
 </div>

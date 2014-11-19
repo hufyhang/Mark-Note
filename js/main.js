@@ -88,6 +88,10 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
         return 'http://feifeihang.info/note/#/sync/' + msg;
       };
 
+      $scope.encode = function (data) {
+        return encodeURIComponent(data);
+      };
+
       $scope.id.set(noteId);
 
       $event.listen('close', function () {
