@@ -1,20 +1,33 @@
 <div ch-scope="editorScope">
-  <div class="navbar">
-    <a id="preview-a" href="#/html/" ch-event="click: preview" ch-name="previewBtn">Preview</a>
-    <a id="edit-a" href="#/edit/" ch-event="click: edit" ch-name="editBtn">Edit</a>
-    |
-    <a id="save-btn" href="#/" ch-name="saveBtn" ch-event="click: save">
-      <i class="fa fa-floppy-o"></i>
-    </a>
-    <a href="#/push">
-      <i class="fa fa-upload"></i>
-    </a>
-    <a id="download-btn" href="#/download/" ch-event="click: download">
-      <i class="fa fa-file-code-o"></i>
-    </a>
-    <span id="remove-btn" ch-event="click: remove">
-      <i class="fa fa-times-circle"></i>
-    </span>
+  <div class="navbar ch-row">
+    <div class="ch-xs-12 ch-sm-0">
+      <select id="select" ch-name="select" ch-event="change: loadNote" ch-inline>
+        <option data-counter="{{counter}}" data-id="{{id}}">{{cloud}}{{title}}</option>
+      </select>
+      <span id="small-remove-btn" ch-event="click: remove">
+        <i class="fa fa-times-circle"></i>
+      </span>
+    </div>
+
+    <div class="ch-xs-0 ch-sm-12">
+
+      <a id="preview-a" href="#/html/" ch-event="click: preview" ch-name="previewBtn">Preview</a>
+      <a id="edit-a" href="#/edit/" ch-event="click: edit" ch-name="editBtn">Edit</a>
+      |
+      <a id="save-btn" href="#/" ch-name="saveBtn" ch-event="click: save">
+        <i class="fa fa-floppy-o"></i>
+      </a>
+      <a href="#/push">
+        <i class="fa fa-upload"></i>
+      </a>
+      <a id="download-btn" href="#/download/" ch-event="click: download">
+        <i class="fa fa-file-code-o"></i>
+      </a>
+      <span id="remove-btn" ch-event="click: remove">
+        <i class="fa fa-times-circle"></i>
+      </span>
+
+    </div>
   </div>
   <div id="editer-preview-div" ch-name="container"></div>
 </div>

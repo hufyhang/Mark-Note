@@ -246,7 +246,32 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
   function setEditorScope(startEdit) {
     $ch.scope('editorScope', function ($scope, $event) {
-      $event.listen('save', function () {
+      // Load notes.
+      $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
+      $scope.noteEntities = [];
+      var counter = 0;
+      $ch.each($ch.source('notes'), function (id, note) {
+        $scope.noteEntities.push({
+          counter: counter++,
+          id: note.id,
+          title: note.title,
+          cloud: note.cloud === true
+          ? '[CLOUD] '
+          : ''
+        });
+      });
+
+      $scope.select.inline($scope.noteEntities);
+      var index = $ch.source('select') || 0;
+      $scope.select.el.selectedIndex = index;
+
+      $event.listen('loadNote', function (evt) {
+        var option = evt.target.selectedOptions[0];
+        var index = parseInt(option.getAttribute('data-counter'), 10);
+        $ch.source('select', index);
+        $ch.router.navigate('note/' + option.getAttribute('data-id'));
+      })
+      .listen('save', function () {
         if ($scope.ace === undefined ||
             $scope.ace.getValue().trim() === '') {
           return;

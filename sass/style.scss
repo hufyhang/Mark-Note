@@ -63,6 +63,8 @@ body {
 }
 
 [ch-scope=appScope] {
+  overflow: auto;
+
   #app-scope-container {
     height: 100%;
   }
@@ -184,6 +186,19 @@ body {
   // bottom: 0px;
   width: 100%;
   height: 100%;
+
+  #select {
+    width: 90%;
+    margin-bottom: 5px;
+  }
+
+  #small-remove-btn {
+    margin-left: 20px;
+    width: 3%;
+    color: #d2042e;
+    float: right;
+    cursor: pointer;
+  }
 
   #remove-btn {
     color: #d2042e;
