@@ -30,6 +30,10 @@ body {
   }
 }
 
+.hidden {
+  display: none !important;
+}
+
 .navbar {
   color: black;
   padding: 10px 20px;
@@ -66,6 +70,50 @@ body {
   #nav-container, #editor-container {
     height: 100%;
   }
+
+  #overlay {
+    position: fixed;
+    overflow: auto;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+  }
+}
+
+[ch-scope=overlayScope] {
+  position: absolute;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin: 5% 20%;
+  width: 60%;
+  background: #fff;
+  color: black;
+
+  #close-overlay-btn {
+    position: absolute;
+    cursor: pointer;
+    top: 2px;
+    right: 5px;
+    color: red;
+  }
+
+  #img-div {
+    position: absolute;
+    top: 100px;
+    left: 50%;
+
+    img {
+      position: relative;
+      left: -50%;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff;
+    }
+  }
+
 }
 
 [ch-scope=navScope] {
@@ -73,7 +121,6 @@ body {
   color: black;
   height: 100%;
   position: relative;
-
 
   #nav-list {
     margin: 0;
@@ -87,9 +134,9 @@ body {
       padding: 0;
       margin-bottom: 90px;
 
-      li {
+      a {
+        display: block;
         padding: 10px;
-        list-style: none;
         background: #eaeaea;
         border-bottom: 1px solid $borderColor;
         white-space: nowrap;
@@ -97,12 +144,12 @@ body {
         text-overflow: ellipsis;
       }
 
-      li.active {
+      a.active {
         background: $bgColor;
         color: $fgColor;
       }
 
-      li.active a {
+      a.active a {
         color: $fgColor;
       }
     }

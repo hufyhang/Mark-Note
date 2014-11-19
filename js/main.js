@@ -5,6 +5,10 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
   var SYNC = 'http://feifeihang.info/note/php/sync.php';
   var SOTRE_KEY = 'speed-note';
 
+  window.onbeforeunload = function() {
+    return "Are you sure you want to close Mark Note?";
+  };
+
   $ch.event.listen('nav', function () {
     var navTemplate = $ch.readFile('nav-template.html');
     $ch.scope('appScope').nav.html(navTemplate);
@@ -27,15 +31,16 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     editorScope.ace = $scope.ace;
   })
   .listen('load', function (id) {
-    // Save current work first.
-    $ch.scope('editorScope')._eventHandler.emit('save');
-
-    $ch.event.emit('editor');
     // Jump to `home` if something is wrong.
     try {
+      // Save current work first.
+      $ch.scope('editorScope')._eventHandler.emit('save');
+
+      $ch.event.emit('editor');
+
       // First, highlight active note list.
       var ul = $ch.scope('navScope').notesUl;
-      var lis = $ch.findAll("li", ul.el);
+      var lis = $ch.findAll("a", ul.el);
       $ch.each(lis, function (li) {
         li.removeClass('active');
       });
@@ -73,12 +78,30 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     // Get editor container from appScope.
     $ch.scope('appScope').editorContainer.html(editorTemplate);
     setEditorScope(true);
+  })
+  .listen('overlay', function (noteId) {
+    var overlayTemp = $ch.readFile('overlay-template.html');
+    $ch.scope('appScope').overlay.html(overlayTemp).removeClass('hidden');
+
+    $ch.scope('overlayScope', function ($scope, $event) {
+      $scope.addPrefix = function (msg) {
+        return 'http://feifeihang.info/note/#/sync/' + msg;
+      };
+
+      $scope.id.set(noteId);
+
+      $event.listen('close', function () {
+        $ch.scope('appScope').overlay.html('').addClass('hidden');
+      });
+
+    });
   });
 
   // Setting router rules.
   $ch.router.add({
     'home': function () {
-      $ch.scope('appScope', function () {
+      $ch.scope('appScope', function ($scope) {
+        $scope.overlay.addClass('hidden');
         $ch.event.emit('nav');
         $ch.event.emit('editor');
       });
@@ -121,7 +144,8 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
       var callback = function (res) {
         if (res.status === 200) {
-          alert('Your public note ID is: ' + notes);
+          $ch.event.emit('overlay', notes);
+          // alert('Your public note ID is: ' + notes);
         } else {
           alert('Oops, something wrong. Please try later.');
         }
@@ -140,6 +164,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
       });
     },
     "sync/:notes": function (q) {
+      $ch.router.navigate('home');
       var notes = q.notes;
       var passcode = window.prompt('Passcode: ');
       if (passcode === null || passcode === undefined) {
@@ -160,7 +185,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
           notes[content.id] = content;
 
           $ch.store.local(SOTRE_KEY, notes);
-          $ch.router.navigate('home');
+          $ch.router.navigate('note/' + content.id);
         }
       };
 
@@ -231,7 +256,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
         // First, highlight active note list.
         var ul = $ch.scope('navScope').notesUl;
-        var lis = $ch.findAll("li", ul.el);
+        var lis = $ch.findAll("a", ul.el);
         $ch.each(lis, function (li) {
           li.removeClass('active');
         });

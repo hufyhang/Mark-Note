@@ -1,0 +1,12 @@
+<div ch-scope="overlayScope">
+  <div id="close-overlay-btn" ch-event="click: close"><i class="fa fa-times-circle fa-2x"></i></div>
+
+  <div id="overlay-message" ch-data>
+    Your note is published with ID:<br/>
+    <a href="{{id | addPrefix}}">{{ id }}</a>
+  </div>
+
+  <div id="img-div" ch-data>
+    <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data={{ id | addPrefix }}" alt="QR Code"/>
+  </div>
+</div>

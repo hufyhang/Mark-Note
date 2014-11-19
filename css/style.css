@@ -12,6 +12,9 @@ body {
   body a:hover {
     text-decoration: none; }
 
+.hidden {
+  display: none !important; }
+
 .navbar {
   color: black;
   padding: 10px 20px;
@@ -37,6 +40,40 @@ body {
   height: 100%; }
 [ch-scope=appScope] #nav-container, [ch-scope=appScope] #editor-container {
   height: 100%; }
+[ch-scope=appScope] #overlay {
+  position: fixed;
+  overflow: auto;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5); }
+
+[ch-scope=overlayScope] {
+  position: absolute;
+  border-radius: 10px;
+  padding: 20px;
+  text-align: center;
+  margin: 5% 20%;
+  width: 60%;
+  background: #fff;
+  color: black; }
+  [ch-scope=overlayScope] #close-overlay-btn {
+    position: absolute;
+    cursor: pointer;
+    top: 2px;
+    right: 5px;
+    color: red; }
+  [ch-scope=overlayScope] #img-div {
+    position: absolute;
+    top: 100px;
+    left: 50%; }
+    [ch-scope=overlayScope] #img-div img {
+      position: relative;
+      left: -50%;
+      padding: 20px;
+      border-radius: 10px;
+      background: #fff; }
 
 [ch-scope=navScope] {
   color: black;
@@ -52,18 +89,18 @@ body {
       margin: 0;
       padding: 0;
       margin-bottom: 90px; }
-      [ch-scope=navScope] #nav-list ul li {
+      [ch-scope=navScope] #nav-list ul a {
+        display: block;
         padding: 10px;
-        list-style: none;
         background: #eaeaea;
         border-bottom: 1px solid #cacaca;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis; }
-      [ch-scope=navScope] #nav-list ul li.active {
+      [ch-scope=navScope] #nav-list ul a.active {
         background: #101317;
         color: #62f34b; }
-      [ch-scope=navScope] #nav-list ul li.active a {
+      [ch-scope=navScope] #nav-list ul a.active a {
         color: #62f34b; }
   [ch-scope=navScope] footer {
     position: absolute;
