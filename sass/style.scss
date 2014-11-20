@@ -265,6 +265,7 @@ body {
     blockquote {
       border-left: 4px solid $fgColor;
       padding-left: 20px;
+      font-style: italic;
     }
 
     pre {
@@ -272,6 +273,13 @@ body {
       padding: 20px;
       color: #000;
       background: url(/img/blueprint.png) top center #eaeaea;
+    }
+
+    :not(pre) code {
+      background: url(/img/blueprint.png) top center #eaeaea;
+      padding: 5px 10px;
+      color: #000;
+      border-radius: 6px;
     }
   }
 }
