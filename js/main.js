@@ -144,6 +144,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     },
     'note/:id': function (q) {
       $ch.event.emit('load', q.id);
+      $ch.router.navigate('#');
     },
     'export': function () {
       var json = $ch.store.local(SOTRE_KEY) || {};
