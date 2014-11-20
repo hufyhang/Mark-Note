@@ -165,6 +165,9 @@ body {
     padding: 30px 20px;
     font-family: "Open Sans", sans-serif;
     font-weight: normal; }
+    [ch-scope=previewScope] #preview-div img {
+      max-height: 100%;
+      max-width: 100%; }
     [ch-scope=previewScope] #preview-div a {
       color: #62f34b; }
     [ch-scope=previewScope] #preview-div td, [ch-scope=previewScope] #preview-div th {

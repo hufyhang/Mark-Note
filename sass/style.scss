@@ -260,6 +260,11 @@ body {
     font-family: "Open Sans", sans-serif;
     font-weight: normal;
 
+    img {
+      max-height: 100%;
+      max-width: 100%;
+    }
+
     a {
       color: $lightGreen;
     }
