@@ -111,6 +111,18 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     $ch.scope('appScope').overlay.html(removeTemp).removeClass('hidden');
 
     $ch.scope('overlayScope', function ($scope, $event) {
+      var title = $ch.source('id');
+
+      $scope.addCloudPrefix = function (note) {
+        var prefix = note.cloud === true
+        ? '<i class="fa fa-cloud"></i> '
+        : '';
+
+        return prefix + note.title;
+      };
+
+      $scope.title.set($ch.store.local(SOTRE_KEY)[title]);
+
       $event.listen('close', function () {
         $ch.scope('appScope').overlay.html('').addClass('hidden');
       });
