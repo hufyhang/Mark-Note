@@ -77,6 +77,7 @@ body {
 
   #nav-container, #editor-container {
     height: 100%;
+    transition: width 0.5s ease-in-out;
   }
 
   #overlay {
@@ -139,6 +140,11 @@ body {
   color: black;
   height: 100%;
   position: relative;
+
+  #expand-btn {
+    float: right;
+    cursor: pointer;
+  }
 
   #nav-list {
     margin: 0;

@@ -143,6 +143,27 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
       });
     });
+  })
+  .listen('toggleWidth', function (data) {
+    var app = $ch.scope('appScope');
+    if (data.status === 'CLOSE') {
+      $ch.source('class', {
+        nav: app.nav.el.className,
+        editorContainer: app.editorContainer.el.className
+      });
+
+      $ch.scope('appScope').nav.el.className = 'ch-xs-0 ch-sm-6';
+      $ch.scope('appScope').editorContainer.el.className = 'ch-xs-12 ch-sm-6';
+      data.target.innerHTML = '<i class="fa fa-chevron-left"></i>';
+      data.target.setAttribute('data-status', 'open');
+    } else {
+      var classes = $ch.source('class');
+      console.log(classes);
+      $ch.scope('appScope').nav.el.className = classes.nav;
+      $ch.scope('appScope').editorContainer.el.className = classes.editorContainer;
+      data.target.innerHTML = '<i class="fa fa-chevron-right"></i>';
+      data.target.setAttribute('data-status', 'close');
+    }
   });
 
   // Setting router rules.
@@ -248,6 +269,16 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
   function setNavScope() {
     $ch.scope('navScope', function ($scope, $event) {
+      $event.listen('toggleWidth', function (evt) {
+        var target = evt.target || window.event.srcElement;
+        target = target.parentNode;
+        var status = target.getAttribute('data-status');
+        $ch.event.emit('toggleWidth', {
+          target: target,
+          status: status.trim().toUpperCase()
+        });
+      });
+
       $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
       $scope.noteEntities = [];
       $ch.each($ch.source('notes'), function (id, note, index) {

@@ -42,7 +42,8 @@ body {
   [ch-scope=appScope] #app-scope-container {
     height: 100%; }
   [ch-scope=appScope] #nav-container, [ch-scope=appScope] #editor-container {
-    height: 100%; }
+    height: 100%;
+    transition: width 0.5s ease-in-out; }
   [ch-scope=appScope] #overlay {
     position: fixed;
     overflow: auto;
@@ -90,6 +91,9 @@ body {
   color: black;
   height: 100%;
   position: relative; }
+  [ch-scope=navScope] #expand-btn {
+    float: right;
+    cursor: pointer; }
   [ch-scope=navScope] #nav-list {
     margin: 0;
     padding: 0;
