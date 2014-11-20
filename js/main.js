@@ -6,7 +6,8 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
   var SOTRE_KEY = 'speed-note';
 
   window.onbeforeunload = function() {
-    return "Are you sure you want to close Mark Note?";
+    // return "Please make sure you have saved your work.";
+    $ch.scope('editorScope')._eventHandler.emit('save');
   };
 
   marked.setOptions({
@@ -107,6 +108,11 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
     });
   })
   .listen('remove', function () {
+    if ($ch.source('id') === undefined) {
+      return;
+    }
+
+    $ch.scope('editorScope')._eventHandler.emit('preview');
     var removeTemp = $ch.readFile('remove-template.html');
     $ch.scope('appScope').overlay.html(removeTemp).removeClass('hidden');
 
@@ -114,11 +120,15 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
       var title = $ch.source('id');
 
       $scope.addCloudPrefix = function (note) {
+        var title = note.title;
+        title = title.replace(/>/g, '&gt;');
+        title = title.replace(/</g, '&lt;');
+
         var prefix = note.cloud === true
         ? '<i class="fa fa-cloud"></i> '
         : '';
 
-        return prefix + note.title;
+        return prefix + title;
       };
 
       $scope.title.set($ch.store.local(SOTRE_KEY)[title]);
@@ -282,10 +292,13 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
       $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
       $scope.noteEntities = [];
       $ch.each($ch.source('notes'), function (id, note, index) {
+        var title = note.title;
+        title = title.replace(/>/g, '&gt;');
+        title = title.replace(/</g, '&lt;');
         $scope.noteEntities.push({
           index: index + 1,
           id: note.id,
-          title: note.title,
+          title: title,
           cloud: note.cloud === true
                   ? '<i class="fa fa-cloud"></i> '
                   : ''
