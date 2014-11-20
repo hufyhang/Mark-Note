@@ -1,7 +1,11 @@
-$bgColor: #101317;
-$fgColor: #62f34b;
+// $bgColor: #101317;
+// $fgColor: #62f34b;
+$bgColor: #36373E;
+$fgColor: #eaeaea;
 $boxBg: #fff;
 $darkBlue: #2A81AE;
+$lightBlue: #4C9BDA;
+$lightGreen: #62f34b;
 
 $borderColor: #CACACA;
 
@@ -28,6 +32,7 @@ body {
 
   a:hover {
     text-decoration: none;
+    color: $lightBlue;
   }
 }
 
@@ -155,6 +160,7 @@ body {
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        font-weight: normal;
       }
 
       a.active {
@@ -249,7 +255,7 @@ body {
     font-weight: normal;
 
     a {
-      color: red;
+      color: $lightGreen;
     }
 
     td, th {
@@ -258,7 +264,7 @@ body {
     }
 
     th {
-      background: $darkBlue;
+      background: $lightBlue;
       // border: 1px solid #000;
     }
 
@@ -269,7 +275,7 @@ body {
     }
 
     pre {
-      border-left: 6px solid $darkBlue;
+      border-left: 6px solid $lightBlue;
       padding: 20px;
       color: #000;
       background: url(/img/blueprint.png) top center #eaeaea;

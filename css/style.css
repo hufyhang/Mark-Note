@@ -4,13 +4,14 @@ body {
   left: 0;
   height: 100%;
   width: 100%;
-  background: #101317;
-  color: #62f34b;
+  background: #36373e;
+  color: #eaeaea;
   font-weight: lighter; }
   body a {
     color: black; }
   body a:hover {
-    text-decoration: none; }
+    text-decoration: none;
+    color: #4c9bda; }
 
 .hidden {
   display: none !important; }
@@ -106,12 +107,13 @@ body {
         border-bottom: 1px solid #cacaca;
         white-space: nowrap;
         overflow: hidden;
-        text-overflow: ellipsis; }
+        text-overflow: ellipsis;
+        font-weight: normal; }
       [ch-scope=navScope] #nav-list ul a.active {
-        background: #101317;
-        color: #62f34b; }
+        background: #36373e;
+        color: #eaeaea; }
       [ch-scope=navScope] #nav-list ul a.active a {
-        color: #62f34b; }
+        color: #eaeaea; }
   [ch-scope=navScope] footer {
     position: absolute;
     width: 100%;
@@ -160,18 +162,18 @@ body {
     font-family: "Open Sans", sans-serif;
     font-weight: normal; }
     [ch-scope=previewScope] #preview-div a {
-      color: red; }
+      color: #62f34b; }
     [ch-scope=previewScope] #preview-div td, [ch-scope=previewScope] #preview-div th {
-      border: 1px solid #62f34b;
+      border: 1px solid #eaeaea;
       padding: 5px 10px; }
     [ch-scope=previewScope] #preview-div th {
-      background: #2a81ae; }
+      background: #4c9bda; }
     [ch-scope=previewScope] #preview-div blockquote {
-      border-left: 4px solid #62f34b;
+      border-left: 4px solid #eaeaea;
       padding-left: 20px;
       font-style: italic; }
     [ch-scope=previewScope] #preview-div pre {
-      border-left: 6px solid #2a81ae;
+      border-left: 6px solid #4c9bda;
       padding: 20px;
       color: #000;
       background: url(/img/blueprint.png) top center #eaeaea; }
