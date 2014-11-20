@@ -1,5 +1,5 @@
 /* global $ch, ace, marked, hljs */
-$ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './router'], function () {
+$ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], function () {
   'use strict';
 
   var SYNC = 'http://feifeihang.info/note/php/sync.php';
@@ -168,7 +168,6 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
       data.target.setAttribute('data-status', 'open');
     } else {
       var classes = $ch.source('class');
-      console.log(classes);
       $ch.scope('appScope').nav.el.className = classes.nav;
       $ch.scope('appScope').editorContainer.el.className = classes.editorContainer;
       data.target.innerHTML = '<i class="fa fa-chevron-right"></i>';

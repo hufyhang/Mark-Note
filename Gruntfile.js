@@ -80,6 +80,7 @@ module.exports = function (grunt) {
           'dist/js/router.js': ['js/router.js'],
           'dist/js/scope.js': ['js/scope.js'],
           'dist/js/chop.min.js': ['js/chop.min.js'],
+          'dist/js/highlight.min.js': ['js/highlight.min.js'],
           'dist/js/marked.js': ['js/marked.js']
         }
       }
@@ -88,6 +89,7 @@ module.exports = function (grunt) {
     copy: {
       dist: {
         files: [
+          {expand: true, src: ['./js/chop.min.js.map'], dest: 'dist/'},
           {expand: true, cwd: 'js/src-min-noconflict/', src: ['**'], dest: 'dist/js/src-min-noconflict/'},
           {expand: true, src: ['./editor-template.html'], dest: 'dist/'},
           {expand: true, src: ['./nav-template.html'], dest: 'dist/'},
@@ -97,7 +99,11 @@ module.exports = function (grunt) {
           {expand: true, src: ['./remove-template.html'], dest: 'dist/'},
           {expand: true, src: ['./img/markdown.png'], dest: 'dist/'},
           {expand: true, src: ['./img/blueprint.png'], dest: 'dist/'},
-          {expand: true, src: ['./php/sync.php'], dest: 'dist/'}
+          {expand: true, src: ['./php/sync.php'], dest: 'dist/'},
+          {expand: true, src: ['./css/chopjs-layout.css'], dest: 'dist/'},
+          {expand: true, src: ['./css/chopjs-ui-style.css'], dest: 'dist/'},
+          {expand: true, src: ['./.htaccess'], dest: 'dist/'},
+          {expand: true, src: ['./cache.appcache'], dest: 'dist/'}
         ]
       }
     },
