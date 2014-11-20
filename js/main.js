@@ -212,6 +212,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
 
           $ch.store.local(SOTRE_KEY, notes);
           $ch.router.navigate('note/' + content.id);
+          $ch.event.emit('nav');
         }
       };
 
