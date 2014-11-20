@@ -1,4 +1,4 @@
-/* global $ch, ace, marked */
+/* global $ch, ace, marked, hljs */
 $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './router'], function () {
   'use strict';
 
@@ -8,6 +8,12 @@ $ch.require(['./scope', 'crypto', 'utils', 'ui', 'event', 'layout', 'store', './
   window.onbeforeunload = function() {
     return "Are you sure you want to close Mark Note?";
   };
+
+  marked.setOptions({
+    highlight: function highlight(code) {
+      return hljs.highlightAuto(code).value;
+    }
+  });
 
   $ch.event.listen('nav', function () {
     var navTemplate = $ch.readFile('nav-template.html');
