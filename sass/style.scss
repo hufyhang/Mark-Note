@@ -1,6 +1,7 @@
 $bgColor: #101317;
 $fgColor: #62f34b;
 $boxBg: #fff;
+$darkBlue: #2A81AE;
 
 $borderColor: #CACACA;
 
@@ -244,6 +245,7 @@ body {
     overflow: scroll;
     height: 100%;
     padding: 30px 20px;
+    font-family: "Open Sans", sans-serif;
     font-weight: normal;
 
     a {
@@ -255,9 +257,21 @@ body {
       padding: 5px 10px;
     }
 
+    th {
+      background: $darkBlue;
+      // border: 1px solid #000;
+    }
+
     blockquote {
       border-left: 4px solid $fgColor;
       padding-left: 20px;
+    }
+
+    pre {
+      border-left: 6px solid $darkBlue;
+      padding: 20px;
+      color: #000;
+      background: url(/img/blueprint.png) top center #eaeaea;
     }
   }
 }

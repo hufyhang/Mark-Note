@@ -157,12 +157,20 @@ body {
     overflow: scroll;
     height: 100%;
     padding: 30px 20px;
+    font-family: "Open Sans", sans-serif;
     font-weight: normal; }
     [ch-scope=previewScope] #preview-div a {
       color: red; }
     [ch-scope=previewScope] #preview-div td, [ch-scope=previewScope] #preview-div th {
       border: 1px solid #62f34b;
       padding: 5px 10px; }
+    [ch-scope=previewScope] #preview-div th {
+      background: #2a81ae; }
     [ch-scope=previewScope] #preview-div blockquote {
       border-left: 4px solid #62f34b;
       padding-left: 20px; }
+    [ch-scope=previewScope] #preview-div pre {
+      border-left: 6px solid #2a81ae;
+      padding: 20px;
+      color: #000;
+      background: url(/img/blueprint.png) top center #eaeaea; }
