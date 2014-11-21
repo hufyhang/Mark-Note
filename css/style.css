@@ -94,6 +94,11 @@ body {
   [ch-scope=navScope] #expand-btn {
     float: right;
     cursor: pointer; }
+  [ch-scope=navScope] #input-container {
+    margin: 5px; }
+    [ch-scope=navScope] #input-container input {
+      width: 100%;
+      border-radius: 60px; }
   [ch-scope=navScope] #nav-list {
     margin: 0;
     padding: 0;
@@ -104,6 +109,8 @@ body {
       margin: 0;
       padding: 0;
       margin-bottom: 90px; }
+      [ch-scope=navScope] #nav-list ul a:first-child {
+        border-top: 1px solid #cacaca; }
       [ch-scope=navScope] #nav-list ul a {
         display: block;
         padding: 10px;

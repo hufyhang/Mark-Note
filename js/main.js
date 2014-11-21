@@ -1,5 +1,5 @@
 /* global $ch, ace, marked, hljs */
-$ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], function () {
+$ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], function() {
   'use strict';
 
   var SYNC = 'http://feifeihang.info/note/php/sync.php';
@@ -16,184 +16,182 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
     }
   });
 
-  $ch.event.listen('nav', function () {
-    var navTemplate = $ch.readFile('nav-template.html');
-    $ch.scope('appScope').nav.html(navTemplate);
-    setNavScope();
-  })
-  .listen('editor', function () {
-    // Jump to `home` if something is wrong.
-    try {
-      var editorTemplate = $ch.readFile('editor-template.html');
-      $ch.scope('appScope').editorContainer.html(editorTemplate);
-      setEditorScope();
-    } catch (err) {
-      $ch.router.navigate('home');
-    }
-  })
-  .listen('bind editor', function ($scope) {
-    var editorScope = $ch.scope('editorScope');
+  $ch.event.listen('nav', function() {
+      var navTemplate = $ch.readFile('nav-template.html');
+      $ch.scope('appScope').nav.html(navTemplate);
+      setNavScope();
+    })
+    .listen('editor', function() {
+      // Jump to `home` if something is wrong.
+      try {
+        var editorTemplate = $ch.readFile('editor-template.html');
+        $ch.scope('appScope').editorContainer.html(editorTemplate);
+        setEditorScope();
+      } catch (err) {
+        $ch.router.navigate('home');
+      }
+    })
+    .listen('bind editor', function($scope) {
+      var editorScope = $ch.scope('editorScope');
 
-    // Set Ace editor to EditorScope.
-    editorScope.ace = $scope.ace;
-  })
-  .listen('load', function (id) {
-    // Jump to `home` if something is wrong.
-    try {
+      // Set Ace editor to EditorScope.
+      editorScope.ace = $scope.ace;
+    })
+    .listen('load', function(id) {
+      // Jump to `home` if something is wrong.
+      try {
+        // Save current work first.
+        $ch.scope('editorScope')._eventHandler.emit('save');
+
+        $ch.event.emit('editor');
+
+        // First, highlight active note list.
+        var ul = $ch.scope('navScope').notesUl;
+        var lis = $ch.findAll("a", ul.el);
+        $ch.each(lis, function(li) {
+          li.removeClass('active');
+        });
+
+        $ch.find('[data-id=' + id + ']').addClass('active');
+
+        // Then, load editor.
+        $ch.source('id', id);
+        var note = $ch.store.local(SOTRE_KEY)[id];
+        $ch.source('markdown', decodeURIComponent(note.content));
+        var preview = $ch.readFile('preview-template.html');
+        $ch.scope('editorScope').container.html(preview);
+        setPreviewScope();
+      } catch (err) {
+        $ch.router.navigate('home');
+      }
+    })
+    .listen('new', function() {
       // Save current work first.
       $ch.scope('editorScope')._eventHandler.emit('save');
 
-      $ch.event.emit('editor');
-
-      // First, highlight active note list.
+      // First, remove all active note highlight.
       var ul = $ch.scope('navScope').notesUl;
-      var lis = $ch.findAll("a", ul.el);
-      $ch.each(lis, function (li) {
+      var lis = $ch.findAll("li", ul.el);
+      $ch.each(lis, function(li) {
         li.removeClass('active');
       });
 
-      $ch.find('[data-id=' + id + ']').addClass('active');
 
-      // Then, load editor.
-      $ch.source('id', id);
-      var note = $ch.store.local(SOTRE_KEY)[id];
-      $ch.source('markdown', decodeURIComponent(note.content));
-      var preview = $ch.readFile('preview-template.html');
-      $ch.scope('editorScope').container.html(preview);
-      setPreviewScope();
-    } catch (err) {
-      $ch.router.navigate('home');
-    }
-  })
-  .listen('new', function() {
-    // Save current work first.
-    $ch.scope('editorScope')._eventHandler.emit('save');
+      // Clear markdown data source.
+      $ch.source('markdown', undefined);
+      $ch.source('id', undefined);
+      // Set editor scope
+      var editorTemplate = $ch.readFile('editor-template.html');
+      // Get editor container from appScope.
+      $ch.scope('appScope').editorContainer.html(editorTemplate);
+      setEditorScope(true);
+    })
+    .listen('overlay', function(noteId) {
+      var overlayTemp = $ch.readFile('overlay-template.html');
+      $ch.scope('appScope').overlay.html(overlayTemp).removeClass('hidden');
 
-    // First, remove all active note highlight.
-    var ul = $ch.scope('navScope').notesUl;
-    var lis = $ch.findAll("li", ul.el);
-    $ch.each(lis, function (li) {
-      li.removeClass('active');
+      $ch.scope('overlayScope', function($scope, $event) {
+        $scope.addPrefix = function(msg) {
+          return 'http://feifeihang.info/note/#/sync/' + msg;
+        };
+
+        $scope.encode = function(data) {
+          return encodeURIComponent(data);
+        };
+
+        $scope.id.set(noteId);
+
+        $event.listen('close', function() {
+          $ch.scope('appScope').overlay.html('').addClass('hidden');
+        });
+
+      });
+    })
+    .listen('remove', function() {
+      if ($ch.source('id') === undefined) {
+        return;
+      }
+
+      $ch.scope('editorScope')._eventHandler.emit('preview');
+      var removeTemp = $ch.readFile('remove-template.html');
+      $ch.scope('appScope').overlay.html(removeTemp).removeClass('hidden');
+
+      $ch.scope('overlayScope', function($scope, $event) {
+        var title = $ch.source('id');
+
+        $scope.addCloudPrefix = function(note) {
+          var title = note.title;
+          title = title.replace(/>/g, '&gt;');
+          title = title.replace(/</g, '&lt;');
+
+          var prefix = note.cloud === true ? '<i class="fa fa-cloud"></i> ' : '';
+
+          return prefix + title;
+        };
+
+        $scope.title.set($ch.store.local(SOTRE_KEY)[title]);
+
+        $event.listen('close', function() {
+          $ch.scope('appScope').overlay.html('').addClass('hidden');
+        });
+
+        $event.listen('remove', function() {
+          var id = $ch.source('id');
+          if (id === undefined || id === null) {
+            return;
+          }
+          var notes = $ch.store.local(SOTRE_KEY);
+          delete notes[id];
+          $ch.store.local(SOTRE_KEY, notes);
+
+          $event.emit('close');
+
+          $ch.event.emit('nav');
+          $ch.event.emit('editor');
+
+        });
+      });
+    })
+    .listen('toggleWidth', function(data) {
+      var app = $ch.scope('appScope');
+      if (data.status === 'CLOSE') {
+        $ch.source('class', {
+          nav: app.nav.el.className,
+          editorContainer: app.editorContainer.el.className
+        });
+
+        $ch.scope('appScope').nav.el.className = 'ch-xs-0 ch-sm-6';
+        $ch.scope('appScope').editorContainer.el.className = 'ch-xs-12 ch-sm-6';
+        data.target.innerHTML = '<i class="fa fa-chevron-left"></i>';
+        data.target.setAttribute('data-status', 'open');
+      } else {
+        var classes = $ch.source('class');
+        $ch.scope('appScope').nav.el.className = classes.nav;
+        $ch.scope('appScope').editorContainer.el.className = classes.editorContainer;
+        data.target.innerHTML = '<i class="fa fa-chevron-right"></i>';
+        data.target.setAttribute('data-status', 'close');
+      }
     });
-
-
-    // Clear markdown data source.
-    $ch.source('markdown', undefined);
-    $ch.source('id', undefined);
-    // Set editor scope
-    var editorTemplate = $ch.readFile('editor-template.html');
-    // Get editor container from appScope.
-    $ch.scope('appScope').editorContainer.html(editorTemplate);
-    setEditorScope(true);
-  })
-  .listen('overlay', function (noteId) {
-    var overlayTemp = $ch.readFile('overlay-template.html');
-    $ch.scope('appScope').overlay.html(overlayTemp).removeClass('hidden');
-
-    $ch.scope('overlayScope', function ($scope, $event) {
-      $scope.addPrefix = function (msg) {
-        return 'http://feifeihang.info/note/#/sync/' + msg;
-      };
-
-      $scope.encode = function (data) {
-        return encodeURIComponent(data);
-      };
-
-      $scope.id.set(noteId);
-
-      $event.listen('close', function () {
-        $ch.scope('appScope').overlay.html('').addClass('hidden');
-      });
-
-    });
-  })
-  .listen('remove', function () {
-    if ($ch.source('id') === undefined) {
-      return;
-    }
-
-    $ch.scope('editorScope')._eventHandler.emit('preview');
-    var removeTemp = $ch.readFile('remove-template.html');
-    $ch.scope('appScope').overlay.html(removeTemp).removeClass('hidden');
-
-    $ch.scope('overlayScope', function ($scope, $event) {
-      var title = $ch.source('id');
-
-      $scope.addCloudPrefix = function (note) {
-        var title = note.title;
-        title = title.replace(/>/g, '&gt;');
-        title = title.replace(/</g, '&lt;');
-
-        var prefix = note.cloud === true
-        ? '<i class="fa fa-cloud"></i> '
-        : '';
-
-        return prefix + title;
-      };
-
-      $scope.title.set($ch.store.local(SOTRE_KEY)[title]);
-
-      $event.listen('close', function () {
-        $ch.scope('appScope').overlay.html('').addClass('hidden');
-      });
-
-      $event.listen('remove', function () {
-        var id = $ch.source('id');
-        if (id === undefined || id === null) {
-          return;
-        }
-        var notes = $ch.store.local(SOTRE_KEY);
-        delete notes[id];
-        $ch.store.local(SOTRE_KEY, notes);
-
-        $event.emit('close');
-
-        $ch.event.emit('nav');
-        $ch.event.emit('editor');
-
-      });
-    });
-  })
-  .listen('toggleWidth', function (data) {
-    var app = $ch.scope('appScope');
-    if (data.status === 'CLOSE') {
-      $ch.source('class', {
-        nav: app.nav.el.className,
-        editorContainer: app.editorContainer.el.className
-      });
-
-      $ch.scope('appScope').nav.el.className = 'ch-xs-0 ch-sm-6';
-      $ch.scope('appScope').editorContainer.el.className = 'ch-xs-12 ch-sm-6';
-      data.target.innerHTML = '<i class="fa fa-chevron-left"></i>';
-      data.target.setAttribute('data-status', 'open');
-    } else {
-      var classes = $ch.source('class');
-      $ch.scope('appScope').nav.el.className = classes.nav;
-      $ch.scope('appScope').editorContainer.el.className = classes.editorContainer;
-      data.target.innerHTML = '<i class="fa fa-chevron-right"></i>';
-      data.target.setAttribute('data-status', 'close');
-    }
-  });
 
   // Setting router rules.
   $ch.router.add({
-    'home': function () {
-      $ch.scope('appScope', function ($scope) {
+    'home': function() {
+      $ch.scope('appScope', function($scope) {
         $scope.overlay.addClass('hidden');
         $ch.event.emit('nav');
         $ch.event.emit('editor');
       });
     },
-    'note/:id': function (q) {
+    'note/:id': function(q) {
       $ch.event.emit('load', q.id);
       $ch.router.navigate('#');
     },
-    'export': function () {
+    'export': function() {
       var json = $ch.store.local(SOTRE_KEY) || {};
       json = JSON.stringify(json);
       window.location = 'data:application/octet-stream,' + encodeURIComponent(json);
     },
-    'push': function () {
+    'push': function() {
       var passcode = window.prompt('Please set a passcode.');
       if (passcode === null || passcode === undefined) {
         return;
@@ -209,7 +207,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
       // Generate an ID for this collection of notes.
       var notes = $ch.crypto.md5(content + passcode + Date.now() + $ch.utils.random(1000, 99999));
 
-      var callback = function (res) {
+      var callback = function(res) {
         if (res.status === 200) {
           $ch.event.emit('overlay', notes);
           // alert('Your public note ID is: ' + notes);
@@ -230,7 +228,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
         done: callback
       });
     },
-    "sync/:notes": function (q) {
+    "sync/:notes": function(q) {
       $ch.router.navigate('home');
       var notes = q.notes;
       var passcode = window.prompt('Passcode: ');
@@ -240,7 +238,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
 
       var url = SYNC + '?notes=' + notes + '&passcode=' + passcode;
 
-      var callback = function (res) {
+      var callback = function(res) {
         if (res.status === 200) {
           var content = res.responseText;
           content = decodeURIComponent(content);
@@ -263,7 +261,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
       });
 
     },
-    "pull": function () {
+    "pull": function() {
       var notes = window.prompt('Public note ID: ');
       if (notes !== undefined && notes !== null) {
         $ch.router.navigate('sync/' + notes);
@@ -277,44 +275,60 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
   $ch.router.navigate('home');
 
   function setNavScope() {
-    $ch.scope('navScope', function ($scope, $event) {
-      $event.listen('toggleWidth', function (evt) {
-        var target = evt.target || window.event.srcElement;
-        target = target.parentNode;
-        var status = target.getAttribute('data-status');
-        $ch.event.emit('toggleWidth', {
-          target: target,
-          status: status.trim().toUpperCase()
+    $ch.scope('navScope', function($scope, $event) {
+      $event.listen('toggleWidth', function(evt) {
+          var target = evt.target || window.event.srcElement;
+          target = target.parentNode;
+          var status = target.getAttribute('data-status');
+          $ch.event.emit('toggleWidth', {
+            target: target,
+            status: status.trim().toUpperCase()
+          });
+        })
+        .listen('list', function() {
+          $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
+          $scope.noteEntities = [];
+          $ch.each($ch.source('notes'), function(id, note, index) {
+            var title = note.title;
+            title = title.replace(/>/g, '&gt;');
+            title = title.replace(/</g, '&lt;');
+            $scope.noteEntities.push({
+              index: index + 1,
+              id: note.id,
+              title: title,
+              content: note.content,
+              cloud: note.cloud === true ? '<i class="fa fa-cloud"></i> ' : ''
+            });
+          });
+
+          // Filter notes with keywords
+          $scope.noteEntities = $ch.filter($scope.noteEntities, function keywordFilter(item) {
+            var keyword = $scope.keywords.get() || '';
+            keyword = keyword.trim().toUpperCase();
+            var content = decodeURIComponent(item.content.toUpperCase());
+            return content.indexOf(keyword) !== -1;
+          });
+
+          $scope.notesUl.inline($scope.noteEntities);
+
         });
+
+      $scope.keywords.watch(function () {
+        $event.emit('list');
       });
 
-      $ch.source('notes', $ch.store.local(SOTRE_KEY) || {});
-      $scope.noteEntities = [];
-      $ch.each($ch.source('notes'), function (id, note, index) {
-        var title = note.title;
-        title = title.replace(/>/g, '&gt;');
-        title = title.replace(/</g, '&lt;');
-        $scope.noteEntities.push({
-          index: index + 1,
-          id: note.id,
-          title: title,
-          cloud: note.cloud === true
-                  ? '<i class="fa fa-cloud"></i> '
-                  : ''
-        });
-      });
 
-      $scope.notesUl.inline($scope.noteEntities);
-
-      $event.listen('new', function () {
+      $event.listen('new', function() {
         $ch.event.emit('new');
       });
+
+      $event.emit('list');
 
     });
   }
 
   function setEditorScope(startEdit) {
-    $ch.scope('editorScope', function ($scope, $event) {
+    $ch.scope('editorScope', function($scope, $event) {
       var usage = JSON.stringify(localStorage).length / 1000 / 1000;
       $scope.usage.set(usage.toFixed(2));
 
@@ -327,14 +341,12 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
         cloud: ''
       }];
       var counter = 0;
-      $ch.each($ch.source('notes'), function (id, note) {
+      $ch.each($ch.source('notes'), function(id, note) {
         $scope.noteEntities.push({
           counter: counter++,
           id: note.id,
           title: note.title,
-          cloud: note.cloud === true
-          ? '[CLOUD] '
-          : ''
+          cloud: note.cloud === true ? '[CLOUD] ' : ''
         });
       });
 
@@ -342,83 +354,83 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
       var index = $ch.source('select') || 0;
       // $scope.select.el.selectedIndex = index;
 
-      $event.listen('loadNote', function (evt) {
-        var option = evt.target.selectedOptions[0];
-        var index = parseInt(option.getAttribute('data-counter'), 10);
-        $ch.source('select', index);
-        $ch.router.navigate('note/' + option.getAttribute('data-id'));
-      })
-      .listen('save', function () {
-        if ($scope.ace === undefined ||
+      $event.listen('loadNote', function(evt) {
+          var option = evt.target.selectedOptions[0];
+          var index = parseInt(option.getAttribute('data-counter'), 10);
+          $ch.source('select', index);
+          $ch.router.navigate('note/' + option.getAttribute('data-id'));
+        })
+        .listen('save', function() {
+          if ($scope.ace === undefined ||
             $scope.ace.getValue().trim() === '') {
-          return;
-        }
-        var id = $ch.source('id') || Date.now();
-        var content = $scope.ace.getValue();
-        var title = content.trim().split('\n')[0];
-        content = encodeURIComponent(content);
-
-        var notes = $ch.source('notes') || {};
-        notes[id] = {
-          id: id,
-          title: title,
-          content: content
-        };
-        $ch.store.local(SOTRE_KEY, notes);
-        $ch.source('notes', notes);
-        $ch.source('id', id);
-
-        $ch.event.emit('nav');
-
-        // First, highlight active note list.
-        var ul = $ch.scope('navScope').notesUl;
-        var lis = $ch.findAll("a", ul.el);
-        $ch.each(lis, function (li) {
-          li.removeClass('active');
-        });
-
-        $ch.find('[data-id=' + id + ']').addClass('active');
-
-      })
-      .listen('edit', function () {
-        var markdown = $ch.readFile('markdown-template.html');
-        $scope.container.html(markdown);
-        setMarkdownScope();
-
-        $scope.previewBtn.removeClass('active');
-        $scope.editBtn.addClass('active');
-      })
-      .listen('preview', function () {
-        if ($scope.ace) {
+            return;
+          }
+          var id = $ch.source('id') || Date.now();
           var content = $scope.ace.getValue();
-          $ch.source('markdown', content);
-        }
+          var title = content.trim().split('\n')[0];
+          content = encodeURIComponent(content);
 
-        var preview = $ch.readFile('preview-template.html');
-        $scope.container.html(preview);
-        setPreviewScope();
+          var notes = $ch.source('notes') || {};
+          notes[id] = {
+            id: id,
+            title: title,
+            content: content
+          };
+          $ch.store.local(SOTRE_KEY, notes);
+          $ch.source('notes', notes);
+          $ch.source('id', id);
 
-        $scope.editBtn.removeClass('active');
-        $scope.previewBtn.addClass('active');
-      })
-      .listen('download', function () {
-        var prefix = 'data:text/html,';
-        var markdown = decodeURIComponent($ch.source('markdown') || '');
-        // Escape GFM check lists.
-        markdown = markdown.replace(/^[\+\-]\s*\[[ ]\]/gm,
-                                    '* <i class="fa fa-square-o"></i>');
-        markdown = markdown.replace(/^[\+\-]\s*\[[xXvV]\]/gm,
-                                    '* <i class="fa fa-check-square-o"></i>');
+          $ch.event.emit('nav');
 
-        window.location = prefix + marked(markdown, {
-          gfm: true,
-          tables: true,
-          breaks: true
+          // First, highlight active note list.
+          var ul = $ch.scope('navScope').notesUl;
+          var lis = $ch.findAll("a", ul.el);
+          $ch.each(lis, function(li) {
+            li.removeClass('active');
+          });
+
+          $ch.find('[data-id=' + id + ']').addClass('active');
+
+        })
+        .listen('edit', function() {
+          var markdown = $ch.readFile('markdown-template.html');
+          $scope.container.html(markdown);
+          setMarkdownScope();
+
+          $scope.previewBtn.removeClass('active');
+          $scope.editBtn.addClass('active');
+        })
+        .listen('preview', function() {
+          if ($scope.ace) {
+            var content = $scope.ace.getValue();
+            $ch.source('markdown', content);
+          }
+
+          var preview = $ch.readFile('preview-template.html');
+          $scope.container.html(preview);
+          setPreviewScope();
+
+          $scope.editBtn.removeClass('active');
+          $scope.previewBtn.addClass('active');
+        })
+        .listen('download', function() {
+          var prefix = 'data:text/html,';
+          var markdown = decodeURIComponent($ch.source('markdown') || '');
+          // Escape GFM check lists.
+          markdown = markdown.replace(/^[\+\-]\s*\[[ ]\]/gm,
+            '* <i class="fa fa-square-o"></i>');
+          markdown = markdown.replace(/^[\+\-]\s*\[[xXvV]\]/gm,
+            '* <i class="fa fa-check-square-o"></i>');
+
+          window.location = prefix + marked(markdown, {
+            gfm: true,
+            tables: true,
+            breaks: true
+          });
+        })
+        .listen('remove', function() {
+          $ch.event.emit('remove');
         });
-      })
-      .listen('remove', function () {
-        $ch.event.emit('remove');
-      });
 
       if (startEdit) {
         $event.emit('edit');
@@ -430,7 +442,7 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
   }
 
   function setMarkdownScope() {
-    $ch.scope('markdownScope', function ($scope) {
+    $ch.scope('markdownScope', function($scope) {
       $ch.source('change', undefined);
       var markdown = $ch.source('markdown');
       if (markdown) {
@@ -441,6 +453,19 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
       $scope.ace.setTheme("ace/theme/tomorrow_night_eighties");
       $scope.ace.getSession().setMode("ace/mode/markdown");
       $scope.ace.setOption("wrap", 60);
+      $scope.ace.getSession().setUseSoftTabs(true);
+      $scope.ace.commands.addCommand({
+        name: 'saveCommand',
+        bindKey: {
+          win: 'Ctrl-S',
+          mac: 'Command-S'
+        },
+        exec: function(editor) {
+          $ch.scope('editorScope')._eventHandler.emit('save');
+        },
+        readOnly: true
+      });
+
       $scope.ace.setFontSize(14);
 
       $ch.event.emit('bind editor', $scope);
@@ -449,14 +474,14 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
   }
 
   function setPreviewScope() {
-    $ch.scope('previewScope', function ($scope) {
+    $ch.scope('previewScope', function($scope) {
       var markdown = $ch.source('markdown');
       if (markdown) {
         // Escape GFM check lists.
         markdown = markdown.replace(/^[\+\-]\s*\[[ ]\]/gm,
-                                    '* <i class="fa fa-square-o"></i>');
+          '* <i class="fa fa-square-o"></i>');
         markdown = markdown.replace(/^[\+\-]\s*\[[xXvV]\]/gm,
-                                    '* <i class="fa fa-check-square-o"></i>');
+          '* <i class="fa fa-check-square-o"></i>');
 
         $scope.preview.html(marked(markdown, {
           gfm: true,

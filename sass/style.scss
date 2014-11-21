@@ -146,6 +146,18 @@ body {
     cursor: pointer;
   }
 
+  #input-container {
+    // margin-left: 5px;
+    // margin-right: 5px;
+    // margin-bottom: 5px;
+    margin: 5px;
+
+    input {
+      width: 100%;
+      border-radius: 60px;
+    }
+  }
+
   #nav-list {
     margin: 0;
     padding: 0;
@@ -157,6 +169,10 @@ body {
       margin: 0;
       padding: 0;
       margin-bottom: 90px;
+
+      a:first-child {
+        border-top: 1px solid #cacaca;
+      }
 
       a {
         display: block;
