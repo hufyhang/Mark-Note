@@ -404,6 +404,11 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
       .listen('download', function () {
         var prefix = 'data:text/html,';
         var markdown = decodeURIComponent($ch.source('markdown') || '');
+        // Escape GFM check lists.
+        markdown = markdown.replace(/^[\+\-]\s*\[[ ]\]/gm,
+                                    '* <i class="fa fa-square-o"></i>');
+        markdown = markdown.replace(/^[\+\-]\s*\[[xXvV]\]/gm,
+                                    '* <i class="fa fa-check-square-o"></i>');
 
         window.location = prefix + marked(markdown, {
           gfm: true,
@@ -447,6 +452,12 @@ $ch.require(['./scope', 'crypto', 'utils', 'event', 'store', './router'], functi
     $ch.scope('previewScope', function ($scope) {
       var markdown = $ch.source('markdown');
       if (markdown) {
+        // Escape GFM check lists.
+        markdown = markdown.replace(/^[\+\-]\s*\[[ ]\]/gm,
+                                    '* <i class="fa fa-square-o"></i>');
+        markdown = markdown.replace(/^[\+\-]\s*\[[xXvV]\]/gm,
+                                    '* <i class="fa fa-check-square-o"></i>');
+
         $scope.preview.html(marked(markdown, {
           gfm: true,
           tables: true,
