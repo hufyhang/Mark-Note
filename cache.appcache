@@ -1,5 +1,5 @@
 CACHE MANIFEST
-# 2014-11-21-13:57-38E
+# 2014-11-21-13:57-50C
 
 CACHE:
 index.html
@@ -11,6 +11,7 @@ overlay-template.html
 remove-template.html
 img/markdown.png
 img/blueprint.png
+img/icon-search.png
 js/chop.min.js
 js/chop.min.js.map
 js/main.js
