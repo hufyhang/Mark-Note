@@ -167,7 +167,8 @@ body {
     font-weight: normal; }
     [ch-scope=previewScope] #preview-div img {
       max-height: 100%;
-      max-width: 100%; }
+      max-width: 100%;
+      background: #fff; }
     [ch-scope=previewScope] #preview-div a {
       color: #62f34b; }
     [ch-scope=previewScope] #preview-div td, [ch-scope=previewScope] #preview-div th {
